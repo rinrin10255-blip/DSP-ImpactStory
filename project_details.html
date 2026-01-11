@@ -1,0 +1,105 @@
+{% extends "base.html" %}
+{% block title %}Project{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start gap-3 mb-3">
+  <div>
+    <h3 class="mb-1">{{ project.title }}</h3>
+    <div class="text-muted small">
+      Created: {{ to_local(project.created_at).strftime("%Y-%m-%d %H:%M") }}
+      · Last updated: {{ to_local(project.updated_at).strftime("%Y-%m-%d %H:%M") }}
+
+      {% if paper %}
+        · Paper: {{ paper.filename }}
+        · <a href="{{ url_for('download_paper', project_id=project.id) }}">Download</a>
+      {% endif %}
+    </div>
+  </div>
+
+  <form method="post" action="{{ url_for('project_status', project_id=project.id) }}" class="d-flex gap-2">
+    <select class="form-select" name="status">
+      <option value="todo" {% if project.status=="todo" %}selected{% endif %}>To do</option>
+      <option value="in_progress" {% if project.status=="in_progress" %}selected{% endif %}>In progress</option>
+      <option value="done" {% if project.status=="done" %}selected{% endif %}>Done</option>
+    </select>
+    <button class="btn btn-outline-primary">Update</button>
+  </form>
+</div>
+
+<div class="row g-3">
+  <!-- Template -->
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="mb-3">Impact story template (editable)</h5>
+
+        <form method="post" action="{{ url_for('project_save', project_id=project.id) }}">
+          <div class="mb-3">
+            <label class="form-label">What the research is about</label>
+            <textarea class="form-control" rows="3" name="what_about">{{ fields.get("what_about","") }}</textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Methods used</label>
+            <textarea class="form-control" rows="3" name="methods">{{ fields.get("methods","") }}</textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Key insights</label>
+            <textarea class="form-control" rows="4" name="key_insights">{{ fields.get("key_insights","") }}</textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Results</label>
+            <textarea class="form-control" rows="4" name="results">{{ fields.get("results","") }}</textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Impact / outcomes</label>
+            <textarea class="form-control" rows="4" name="impact_outcomes">{{ fields.get("impact_outcomes","") }}</textarea>
+          </div>
+
+          <div class="mb-3">
+            <label class="form-label">Limitations / caveats</label>
+            <textarea class="form-control" rows="3" name="limitations">{{ fields.get("limitations","") }}</textarea>
+          </div>
+
+          <button class="btn btn-primary">Save draft</button>
+        </form>
+      </div>
+    </div>
+  </div>
+
+  <!-- PDF -->
+  <div class="col-12 col-lg-6">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-center mb-2">
+          <h5 class="mb-0">Research paper</h5>
+          {% if paper %}
+            <div class="d-flex gap-2">
+              <a class="btn btn-sm btn-outline-secondary"
+                 href="{{ url_for('download_paper', project_id=project.id) }}">Download</a>
+              <a class="btn btn-sm btn-outline-primary"
+                 href="{{ url_for('view_paper', project_id=project.id) }}" target="_blank">Open</a>
+            </div>
+          {% endif %}
+        </div>
+
+        {% if paper %}
+          <div class="border rounded flex-grow-1 overflow-hidden" style="min-height: 70vh;">
+            <iframe
+              src="{{ url_for('view_paper', project_id=project.id) }}"
+              style="width: 100%; height: 100%; border: 0;"
+              title="PDF Viewer"
+            ></iframe>
+          </div>
+        {% else %}
+          <p class="text-muted mb-0">No paper uploaded for this project.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

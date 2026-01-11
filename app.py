@@ -5,7 +5,7 @@ from zoneinfo import ZoneInfo
 from flask import Flask, render_template, request, redirect, url_for, flash, send_from_directory
 from werkzeug.utils import secure_filename
 
-from model import db, Project, Paper, Draft
+from models import db, Project, Paper, Draft
 
 # Safety boundary
 ALLOWED_EXTENSIONS = {"pdf"}

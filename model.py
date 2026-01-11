@@ -1,8 +1,11 @@
+# data backbone - What is the Impact Story project, what does it include, and how are its various parts related?
+
 from datetime import datetime, timezone
 from flask_sqlalchemy import SQLAlchemy
 
 db = SQLAlchemy()
 
+# 1v1 impact story template - project + status overview
 class Project(db.Model):
     __tablename__ = "projects"
     id = db.Column(db.Integer, primary_key=True)
@@ -15,6 +18,7 @@ class Project(db.Model):
     draft = db.relationship("Draft", backref="project", uselist=False, cascade="all, delete-orphan")
 
 
+# Original research input - PDF + Save path + text extracted!
 class Paper(db.Model):
     __tablename__ = "papers"
     id = db.Column(db.Integer, primary_key=True)
@@ -23,7 +27,7 @@ class Paper(db.Model):
     filepath = db.Column(db.String(600), nullable=False)
     extracted_text = db.Column(db.Text, nullable=True)
 
-
+# Structured draft of the story + human-in-the-loop
 class Draft(db.Model):
     __tablename__ = "drafts"
     id = db.Column(db.Integer, primary_key=True)

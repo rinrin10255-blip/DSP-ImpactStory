@@ -23,9 +23,16 @@ class Paper(db.Model):
     __tablename__ = "papers"
     id = db.Column(db.Integer, primary_key=True)
     project_id = db.Column(db.Integer, db.ForeignKey("projects.id"), nullable=False)
+    
     filename = db.Column(db.String(400), nullable=False)
     filepath = db.Column(db.String(600), nullable=False)
-    extracted_text = db.Column(db.Text, nullable=True)
+    
+    # raw extracted text from PDF
+    extracted_raw = db.Column(db.Text, nullable=True)
+    # structured extraction as JSON string for autofill
+    extracted_json = db.Column(db.Text, nullable=True)
+
+    created_at = db.Column(db.DateTime, default=datetime.utcnow)
 
 # Structured draft of the story + human-in-the-loop
 class Draft(db.Model):

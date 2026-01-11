@@ -126,13 +126,29 @@ def create_app():
     def project_detail(project_id: int):
         proj = Project.query.get_or_404(project_id)
         draft = proj.draft
+        
+        # Draft fields
         fields = {}
         try:
             fields = json.loads(draft.fields_json) if draft else {}
         except json.JSONDecodeError:
             fields = {}
 
-        return render_template("project_detail.html", project=proj, paper=proj.paper, fields=fields)
+        # Extraction preview (from paper.extracted_text)
+        extraction = {}
+        if proj.paper and proj.paper.extracted_text:
+            try:
+                extraction = json.loads(proj.paper.extracted_text)
+            except json.JSONDecodeError:
+                extraction = {}
+
+        return render_template(
+            "project_detail.html",
+            project=proj,
+            paper=proj.paper,
+            fields=fields,
+            extraction=extraction
+        )
 
     # S5 Review & Edit
     @app.post("/projects/<int:project_id>/save")

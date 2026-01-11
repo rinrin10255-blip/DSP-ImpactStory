@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Projects{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h3 class="mb-0">Projects</h3>
+  <a class="btn btn-primary" href="{{ url_for('upload_get') }}">Upload paper</a>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    {% if projects|length == 0 %}
+      <p class="text-muted mb-0">No projects yet. Upload a paper to create one.</p>
+    {% else %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Title</th>
+              <th>Status</th>
+              <th>Created</th>
+              <th>Last updated</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for p in projects %}
+              <tr>
+                <td class="fw-semibold">{{ p.title }}</td>
+                <td>
+                  {% if p.status == "todo" %}<span class="badge text-bg-secondary">To do</span>{% endif %}
+                  {% if p.status == "in_progress" %}<span class="badge text-bg-warning">In progress</span>{% endif %}
+                  {% if p.status == "done" %}<span class="badge text-bg-success">Done</span>{% endif %}
+                </td>
+                <td class="text-muted">{{ to_local(p.created_at).strftime("%Y-%m-%d %H:%M") }}</td>
+                <td class="text-muted">{{ to_local(p.updated_at).strftime("%Y-%m-%d %H:%M") }}</td>
+                <td class="text-end">
+                  <a class="btn btn-sm btn-outline-primary" href="{{ url_for('project_detail', project_id=p.id) }}">Open</a>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

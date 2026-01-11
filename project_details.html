@@ -61,6 +61,28 @@
   </a>
 
 </div>
+        <!-- S3: Extraction preview (mock) -->
+        {% if extraction and extraction.get("meta") %}
+  <div class="alert alert-light border mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+      <div class="fw-semibold">Extraction preview</div>
+      <div class="text-muted small">
+        Mode: {{ extraction.get("meta", {}).get("mode", "n/a") }}
+        · {{ extraction.get("meta", {}).get("extracted_at", "") }}
+      </div>
+    </div>
+    <hr class="my-2">
+
+    <div class="small">
+      <div class="mb-2"><span class="fw-semibold">What about:</span> {{ extraction.get("what_about","") }}</div>
+      <div class="mb-2"><span class="fw-semibold">Methods:</span> {{ extraction.get("methods","") }}</div>
+      <div class="mb-2"><span class="fw-semibold">Key insights:</span> {{ extraction.get("key_insights","") }}</div>
+      <div class="mb-2"><span class="fw-semibold">Results:</span> {{ extraction.get("results","") }}</div>
+      <div class="mb-2"><span class="fw-semibold">Impact:</span> {{ extraction.get("impact_outcomes","") }}</div>
+      <div class="mb-0"><span class="fw-semibold">Limitations:</span> {{ extraction.get("limitations","") }}</div>
+    </div>
+  </div>
+{% endif %}
         <form method="post" action="{{ url_for('project_save', project_id=project.id) }}">
           <div class="mb-3">
             <label class="form-label">What the research is about</label>

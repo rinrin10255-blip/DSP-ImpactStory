@@ -31,8 +31,36 @@
   <div class="col-12 col-lg-6">
     <div class="card h-100">
       <div class="card-body">
-        <h5 class="mb-3">Impact story template (editable)</h5>
+            <h5 class="mb-3">Impact story template (editable)</h5>
 
+<!-- AI-assisted actions -->
+<div class="d-flex flex-wrap gap-2 mb-4">
+
+  <!-- S3: Run extraction -->
+  <form method="post"
+        action="{{ url_for('project_extract', project_id=project.id) }}">
+    <button type="submit"
+            class="btn btn-sm btn-outline-secondary">
+      Run extraction
+    </button>
+  </form>
+
+  <!-- S4: Auto-fill template -->
+  <form method="post"
+        action="{{ url_for('project_autofill', project_id=project.id) }}">
+    <button type="submit"
+            class="btn btn-sm btn-outline-primary">
+      Auto-fill template
+    </button>
+  </form>
+
+  <!-- S5: Export -->
+  <a class="btn btn-sm btn-outline-success"
+     href="{{ url_for('project_export', project_id=project.id) }}">
+    Export draft
+  </a>
+
+</div>
         <form method="post" action="{{ url_for('project_save', project_id=project.id) }}">
           <div class="mb-3">
             <label class="form-label">What the research is about</label>

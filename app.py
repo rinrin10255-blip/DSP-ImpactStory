@@ -7,6 +7,7 @@ from werkzeug.utils import secure_filename
 
 from models import db, Project, Paper, Draft
 
+# Safety boundary
 ALLOWED_EXTENSIONS = {"pdf"}
 
 def allowed_file(filename: str) -> bool:
@@ -40,15 +41,18 @@ def create_app():
     with app.app_context():
         db.create_all()
 
+    # Home page navigation
     @app.get("/")
     def home():
         return redirect(url_for("projects"))
 
+    # S6 Overview
     @app.get("/projects")
     def projects():
         items = Project.query.order_by(Project.created_at.desc()).all()
         return render_template("projects.html", projects=items)
 
+    #upload page
     @app.get("/upload")
     def upload_get():
         return render_template("upload.html")
@@ -100,7 +104,8 @@ def create_app():
 
         flash("Uploaded and project created.", "success")
         return redirect(url_for("project_detail", project_id=p.id))
-    
+
+    # View the PDF online
     @app.get("/papers/<int:project_id>/view")
     def view_paper(project_id: int):
         proj = Project.query.get_or_404(project_id)
@@ -116,6 +121,7 @@ def create_app():
             mimetype="application/pdf"    
         )
 
+    # 核心！S4 auto-fill extraction
     @app.get("/projects/<int:project_id>")
     def project_detail(project_id: int):
         proj = Project.query.get_or_404(project_id)
@@ -128,6 +134,7 @@ def create_app():
 
         return render_template("project_detail.html", project=proj, paper=proj.paper, fields=fields)
 
+    # S5 Review & Edit
     @app.post("/projects/<int:project_id>/save")
     def project_save(project_id: int):
         proj = Project.query.get_or_404(project_id)
@@ -151,6 +158,7 @@ def create_app():
         flash("Draft saved.", "success")
         return redirect(url_for("project_detail", project_id=proj.id))
 
+    # Progress tracking
     @app.post("/projects/<int:project_id>/status")
     def project_status(project_id: int):
         proj = Project.query.get_or_404(project_id)
